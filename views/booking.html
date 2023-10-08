@@ -28,7 +28,7 @@
                 phone,
                 email
             }
-            const data = axios.post('http://localhost:3000/add-user', obj)
+            const data = axios.post('http://localhost:4000/add-user', obj)
             .then(result=> {
                 console.log('data posted')
                 display(result.data)
@@ -65,13 +65,13 @@
                 document.getElementById('email').value = obj.email
 
                 ul.removeChild(li)
-                axios.delete(`http://localhost:3000/del-user/${obj.id}`)
+                axios.delete(`http://localhost:4000/del-user/${obj.id}`)
                 .then(res)
                 .catch(err=>{console.log(err)})
             }
 
             deletebtn.onclick = ()=>{
-                axios.delete(`http://localhost:3000/del-user/${obj.id}`)
+                axios.delete(`http://localhost:4000/del-user/${obj.id}`)
                 .then(location.reload)
                 .cath(err=>console.log(err))
             }
@@ -80,7 +80,7 @@
         window.addEventListener('DOMContentLoaded', async ()=>{
             try{
             console.log('dom loaded')
-            const dbdata = await axios.get("http://localhost:3000/get-users").then(result=> {return (result.data)})
+            const dbdata = await axios.get("http://localhost:4000/get-users").then(result=> {return (result.data)})
             console.log('inside dom loaded')
             if(dbdata.length==0)
                 alert('no booking to display')
