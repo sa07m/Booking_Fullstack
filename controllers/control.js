@@ -17,7 +17,7 @@ exports.addUser = async (req, res, next) => {
             res.json(data)
         }
     }
-    catch (e) { console.log(err) }
+    catch (e) { console.log(e) }
 
 
 }
@@ -30,7 +30,7 @@ exports.getUsers = async (req, res, next) => {
             .then(result => res.json(result))
             .catch(err => console.log(err))
     } catch (e) {
-        console.log(e);
+        console.log('wrong');
     }
 }
 
@@ -38,8 +38,8 @@ exports.getUsers = async (req, res, next) => {
 
 exports.delUser = async (req, res, next) => {
     const id = req.params.id
-    await model.destroy({ where: { id: id } })
-        .then(result => console.log(result))
+    await bookingModel.destroy({ where: { id: id } })
+        .then(result => res.json('deleted'))
         .catch(err => console.log(err))
 
 }
