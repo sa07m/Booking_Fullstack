@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Appointment App</title>
+</head>
+<body>
+    <form onsubmit="userDetails(event)">
+        <h2 style="text-align: center;"> Booking Appointment</h2>
+        <input type="text" name="name" id="name" placeholder="name">
+        <input type="text" name="phone" id="phone" placeholder="phone">
+        <input type="text" name="email" id="email" placeholder="email">
+        <button type="submit">Book your appointment</button>
+        <ul id="lists"></ul>    
+    </form>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.5.1/axios.min.js"></script>
+    <script>
+        function userDetails(event){
+            console.log('submitted')
+            event.preventDefault()
+            const name = document.getElementById('name').value
+            const phone = document.getElementById('phone').value
+            const email = document.getElementById('email').value
+
+            const obj = {
+                name,
+                phone,
+                email
+            }
+            const data = axios.post('http://localhost:3000/add-user', obj)
+            .then(result=> {
+                console.log('data posted')
+                display(result.data)
+            })
+            .catch(err=>console.log(err))
+           // display(obj)
+            document.getElementById('name').value = ''
+            document.getElementById('phone').value = ''
+            document.getElementById('email').value = ''
+        }
+
+        function display(obj){
+            console.log('display func called')
+            const ul = document.getElementById('lists')
+            const li = document.createElement('li')
+            li.textContent = obj.name+'      '+obj.email
+            const editbtn = document.createElement('input')
+            editbtn.type = 'button'
+            editbtn.value = "EDIT"
+
+            const deletebtn = document.createElement('input')
+            deletebtn.type = 'button'
+            deletebtn.value = 'DELETE'
+
+            li.appendChild(editbtn)
+            li.appendChild(deletebtn)
+            ul.appendChild(li)
+
+            editbtn.onclick = ()=>{
+                console.log('edit button clicked')
+
+                document.getElementById('name').value = obj.name
+                document.getElementById('phone').value = obj.phone
+                document.getElementById('email').value = obj.email
+
+                ul.removeChild(li)
+                axios.delete(`http://localhost:3000/del-user/${obj.id}`)
+                .then(res)
+                .catch(err=>{console.log(err)})
+            }
+
+            deletebtn.onclick = ()=>{
+                axios.delete(`http://localhost:3000/del-user/${obj.id}`)
+                .then(location.reload)
+                .cath(err=>console.log(err))
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', async ()=>{
+            try{
+            console.log('dom loaded')
+            const dbdata = await axios.get("http://localhost:3000/get-users").then(result=> {return (result.data)})
+            console.log('inside dom loaded')
+            if(dbdata.length==0)
+                alert('no booking to display')
+            for(var i=0; i<dbdata.length;i++){
+                display(dbdata[i])
+            }
+        }
+        catch(e){
+                console.log(e);
+        }
+        })
+    </script>
+    
+    
+</body>
+</html>
