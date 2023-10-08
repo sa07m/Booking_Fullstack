@@ -2,6 +2,7 @@ const express = require('express')
 const bookingModel = require('../models/model')
 
 exports.addUser = async (req, res, next) => {
+    
     console.log('entered export adduser')
     const name = req.body.name
     const phone = req.body.phone
